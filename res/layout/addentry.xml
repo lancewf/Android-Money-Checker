@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/storeLabel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Store:" />
+
+    <AutoCompleteTextView
+        android:id="@+id/stores"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/storeLabel"
+        android:background="@android:drawable/editbox_background"
+        android:text="" >
+                <requestFocus />
+        </AutoCompleteTextView>
+
+    <TextView
+        android:id="@+id/costLabel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/stores"
+        android:text="Cost:" />
+
+    <EditText
+        android:id="@+id/cost"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/costLabel"
+        android:background="@android:drawable/editbox_background"
+        android:inputType="numberSigned|numberDecimal"
+        android:text="0.0" />
+
+    <TextView
+        android:id="@+id/notesLabel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cost"
+        android:text="Notes:" />
+
+    <EditText
+        android:id="@+id/notes"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/notesLabel"
+        android:background="@android:drawable/editbox_background"
+        android:text="" />
+
+    <DatePicker
+        android:id="@+id/datePicker1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/notes" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/datePicker1"
+        android:text="Bill Type:" />
+
+    <Spinner
+        android:id="@+id/billType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/textView1" />
+
+    <Button
+        android:id="@+id/ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/billType"
+        android:text="OK" />
+
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/billType"
+        android:layout_toLeftOf="@+id/ok"
+        android:text="Cancel" />
+    
+    <Button
+        android:id="@+id/split"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/billType"
+        android:layout_toLeftOf="@+id/cancel"
+        android:text="Split" />
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/billType"
+        android:layout_toLeftOf="@+id/split"
+        android:text="" />
+
+</RelativeLayout>

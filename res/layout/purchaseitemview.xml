@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:orientation="horizontal" android:layout_width="fill_parent" 
+    android:layout_height="fill_parent">
+    
+    <TextView
+        android:id="@+id/purchaseitembilltype"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/stores" 
+        android:text="Allowance"/>
+    
+    <TextView
+        android:id="@+id/purchaseitemyearmonth"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/purchaseitembilltype"
+        android:text="Oct 2011" />
+    <ScrollView
+        android:id="@+id/purchaseitemviewscrollview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true" 
+        android:layout_below="@+id/purchaseitemyearmonth"/>
+    
+    
+</RelativeLayout>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
+
+    <ScrollView
+        android:id="@+id/scrollview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true" >
+
+        <LinearLayout
+            android:id="@+id/LinearLayout02"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/storeLabel"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Store:" />
+
+            <AutoCompleteTextView
+                android:id="@+id/stores"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/editbox_background"
+                android:text="" >
+
+                <requestFocus />
+            </AutoCompleteTextView>
+
+            <TextView
+                android:id="@+id/totalCostLabel"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Total Cost:" />
+
+            <EditText
+                android:id="@+id/totalCost"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/editbox_background"
+                android:inputType="numberSigned|numberDecimal"
+                android:text="0.0" />
+
+            <DatePicker
+                android:id="@+id/datePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true" />
+
+            <LinearLayout
+                android:id="@+id/LinearLayout02"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/AddRowbutton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="Add" />
+
+                <Button
+                    android:id="@+id/submit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="Submit" />
+            </LinearLayout>
+
+            <TableLayout
+                android:id="@+id/tableLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:orientation="horizontal" android:layout_width="fill_parent" 
+    android:layout_height="fill_parent">
+    <ScrollView
+        android:id="@+id/matchingitemviewscrollview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true" />
+    
+    <Button
+        android:id="@+id/submitwith"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/matchingitemviewscrollview"
+        android:text="Submit Anyways" />
+
+    <Button
+        android:id="@+id/matchingcancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/matchingitemviewscrollview"
+        android:layout_toLeftOf="@+id/submitwith"
+        android:text="Cancel" />
+    
+</RelativeLayout>

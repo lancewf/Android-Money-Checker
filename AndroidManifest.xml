@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.finfrock.moneycheck"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk android:minSdkVersion="10" />
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" >
+        <activity
+            android:label="@string/app_name"
+            android:name=".MoneyCheckActivity"
+            android:theme="@android:style/Theme.NoTitleBar" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+      <activity
+            android:label="@string/app_name"
+            android:name=".AllowanceActivity"
+            android:theme="@android:style/Theme.NoTitleBar" />
+      <activity
+            android:label="@string/app_name"
+            android:name=".AddEntryActivity"
+            android:theme="@android:style/Theme.NoTitleBar" />
+      <activity
+            android:label="@string/app_name"
+        	android:name=".MonthlyViewActivity"
+            android:theme="@android:style/Theme.NoTitleBar" />
+      <activity
+            android:label="@string/app_name"
+            android:name=".MonthlyItemViewActivity"
+            android:theme="@android:style/Theme.NoTitleBar" />
+      <activity
+            android:label="@string/app_name"
+            android:name=".ModifyEntryActivity"
+            android:theme="@android:style/Theme.NoTitleBar" />
+      <activity
+            android:label="@string/app_name"
+            android:name=".MatchingItemViewActivity"
+            android:theme="@android:style/Theme.NoTitleBar" />
+      <activity
+            android:label="@string/app_name"
+            android:name=".SplitEntryActivity"
+            android:theme="@android:style/Theme.NoTitleBar" />
+    </application>
+
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+</manifest>
