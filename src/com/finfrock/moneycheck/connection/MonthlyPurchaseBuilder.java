@@ -15,9 +15,9 @@ import com.finfrock.moneycheck.data.Purchase;
 
 public class MonthlyPurchaseBuilder
 {
-    private BillType[] billTypes;
+    private ArrayList<BillType> billTypes;
     
-    public MonthlyPurchaseBuilder(BillType[] billTypes){
+    public MonthlyPurchaseBuilder(ArrayList<BillType> billTypes){
         this.billTypes = billTypes;
     }
     
@@ -130,9 +130,7 @@ public class MonthlyPurchaseBuilder
                 
                 purchases.add(purchase);
             }
-        } catch (IOException e)
-        {
-            // TODO Auto-generated catch block
+        } catch (IOException e){
             e.printStackTrace();
         }
         

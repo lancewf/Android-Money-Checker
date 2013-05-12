@@ -1,5 +1,6 @@
 package com.finfrock.moneycheck;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -28,17 +29,21 @@ import android.widget.TextView;
 public class AddEntryActivity extends Activity {
     private AddEntrySender addEntrySender = new AddEntrySender();
     private String[] storeNames;
+    private ArrayList<BillType> billTypes;
     private MatchingEntrySender matchingEntrySender;
     
     @Override 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addentry);
-        matchingEntrySender = new MatchingEntrySender(
-                DataStore.getInstance().getBillTypes());
+        
         storeNames = getIntent().getExtras().getStringArray("storeNames");
         
-//        getIntent().getExtras().getParcelableArrayList(key)
+        billTypes = 
+        		getIntent().getExtras().getParcelableArrayList("billTypes");
+        
+        matchingEntrySender = new MatchingEntrySender(billTypes);
+
         
         Button okButton = (Button)findViewById(R.id.ok);
         okButton.setOnClickListener(new OnClickListener(){
@@ -80,7 +85,7 @@ public class AddEntryActivity extends Activity {
                                             
         Spinner spinner = (Spinner) findViewById(R.id.billType);
         ArrayAdapter<BillType> adapterBillType = new ArrayAdapter<BillType>(this, 
-                android.R.layout.simple_spinner_item, DataStore.getInstance().getBillTypes());
+                android.R.layout.simple_spinner_item, billTypes);
         adapterBillType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapterBillType);
     }
@@ -163,6 +168,7 @@ public class AddEntryActivity extends Activity {
                 Intent intent = new Intent().setClass(
                         AddEntryActivity.this, 
                         MatchingItemViewActivity.class);
+                intent.putExtra("billTypes", billTypes);
                 intent.putExtra("storeNames", storeNames);
                 intent.putExtra("store", purchase.getStore());
                 intent.putExtra("cost", purchase.getCost());

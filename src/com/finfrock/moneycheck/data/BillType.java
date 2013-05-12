@@ -51,13 +51,31 @@ public class BillType implements Parcelable
     }
 
 	public int describeContents() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	public void writeToParcel(Parcel arg0, int arg1) {
-		// TODO Auto-generated method stub
-		
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(id);
+		dest.writeString(name);
+		dest.writeString(description);
+		dest.writeParcelable(allocatedAmounts, flags);
 	}
     
+	public static final Parcelable.Creator<BillType> CREATOR = new Parcelable.Creator<BillType>() {
+		public BillType createFromParcel(Parcel in) {
+			BillType billType = new BillType();
+			billType.id = in.readInt();
+			billType.name = in.readString();
+			billType.description = in.readString();
+			billType.allocatedAmounts = 
+					in.readParcelable(
+				AllocatedAmountCollection.class.getClassLoader());
+
+			return billType;
+		}
+
+		public BillType[] newArray(int size) {
+			return new BillType[size];
+		}
+	};
 }

@@ -2,7 +2,10 @@ package com.finfrock.moneycheck.data;
 
 import java.util.Calendar;
 
-public class AllocatedAmount
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class AllocatedAmount implements Parcelable
 {
     private int key;
     private double amount;
@@ -49,4 +52,33 @@ public class AllocatedAmount
     {
         this.endDate = endDate;
     }
+    
+	public int describeContents() {
+		return 0;
+	}
+	
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(key);
+		dest.writeDouble(amount);
+		dest.writeInt(billTypeKey);
+		dest.writeSerializable(startDate);
+		dest.writeSerializable(endDate);
+	}
+	
+	public static final Parcelable.Creator<AllocatedAmount> CREATOR = new Parcelable.Creator<AllocatedAmount>() {
+		public AllocatedAmount createFromParcel(Parcel in) {
+			AllocatedAmount allocatedAmount = new AllocatedAmount();
+			allocatedAmount.key = in.readInt();
+			allocatedAmount.amount = in.readDouble();
+			allocatedAmount.billTypeKey = in.readInt();
+			allocatedAmount.startDate = (Calendar)in.readSerializable();
+			allocatedAmount.endDate = (Calendar)in.readSerializable();
+
+			return allocatedAmount;
+		}
+
+		public AllocatedAmount[] newArray(int size) {
+			return new AllocatedAmount[size];
+		}
+	};
 }

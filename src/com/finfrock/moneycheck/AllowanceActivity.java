@@ -6,6 +6,7 @@ import java.util.List;
 import org.json.JSONException;
 
 import com.finfrock.moneycheck.connection.SummaryBuilder;
+import com.finfrock.moneycheck.data.BillType;
 import com.finfrock.moneycheck.data.SummaryItem;
 
 import android.app.Activity;
@@ -17,11 +18,15 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-public class AllowanceActivity extends Activity
-{
+public class AllowanceActivity extends Activity {
+    private ArrayList<BillType> billTypes;
+    
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        billTypes = 
+        		getIntent().getExtras().getParcelableArrayList("billTypes");
+        
     }
     
     protected void onResume(){
@@ -46,8 +51,7 @@ public class AllowanceActivity extends Activity
         protected List<List<String>> doInBackground(Void... nothing) {
             List<List<String>> columnsCollection = new ArrayList<List<String>>();
             try{
-                SummaryBuilder summaryBuilder = new SummaryBuilder(
-                        DataStore.getInstance().getBillTypes());
+                SummaryBuilder summaryBuilder = new SummaryBuilder(billTypes);
             	List<SummaryItem> summaryItems = summaryBuilder.build();
                 
                 for (SummaryItem item : summaryItems){

@@ -15,7 +15,7 @@ public class BillTypeBuilder
 {
     private List<AllocatedAmount> allocatedAmounts;
     
-    public BillType[] build() throws JSONException{
+    public ArrayList<BillType> build() throws JSONException{
         AllocatedAmountsBuilder allocatedAmountsBuilder = 
             new AllocatedAmountsBuilder();
         allocatedAmounts = allocatedAmountsBuilder.build();
@@ -25,7 +25,7 @@ public class BillTypeBuilder
         
         JSONArray jsonArray = new JSONArray(text);
 
-        BillType[] items = new BillType[jsonArray.length()];
+        ArrayList<BillType> items = new ArrayList<BillType>(jsonArray.length());
         
         for (int index = 0; index < jsonArray.length(); index++)
         {
@@ -36,7 +36,7 @@ public class BillTypeBuilder
             item.setName(jsonObject.getString("name"));
             item.setDescription(jsonObject.getString("description"));
             item.setAllocatedAmountCollection(createAllocatedAmount(jsonObject.getInt("key")));
-            items[index] = item;
+            items.add(item);
         }
         
         return items;

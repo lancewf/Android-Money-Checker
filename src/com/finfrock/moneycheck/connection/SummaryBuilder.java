@@ -12,9 +12,9 @@ import com.finfrock.moneycheck.data.SummaryItem;
 
 public class SummaryBuilder
 {
-    private BillType[] billTypes;
+    private ArrayList<BillType> billTypes;
     
-    public SummaryBuilder(BillType[] billTypes){
+    public SummaryBuilder(ArrayList<BillType> billTypes){
         this.billTypes = billTypes;
     }
     

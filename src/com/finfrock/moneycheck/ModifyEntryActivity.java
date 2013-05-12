@@ -1,5 +1,6 @@
 package com.finfrock.moneycheck;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import com.finfrock.moneycheck.R;
@@ -28,6 +29,7 @@ public class ModifyEntryActivity extends Activity {
     private DeleteEntrySender deleteEntrySender = new DeleteEntrySender();
     private int key;
     private String[] storeNames;
+    private ArrayList<BillType> billTypes;
     
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -35,6 +37,8 @@ public class ModifyEntryActivity extends Activity {
         setContentView(R.layout.modifyentry);
         
         storeNames = getIntent().getExtras().getStringArray("storeNames");
+        billTypes = 
+        		getIntent().getExtras().getParcelableArrayList("billTypes");
         
         Button saveButton = (Button)findViewById(R.id.save);
         saveButton.setOnClickListener(new OnClickListener(){
@@ -59,8 +63,7 @@ public class ModifyEntryActivity extends Activity {
                                             
         Spinner spinner = (Spinner) findViewById(R.id.modifyBillType);
         ArrayAdapter<BillType> adapterBillType = new ArrayAdapter<BillType>(this, 
-                android.R.layout.simple_spinner_item, 
-                DataStore.getInstance().getBillTypes());
+                android.R.layout.simple_spinner_item, billTypes);
         adapterBillType.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapterBillType);

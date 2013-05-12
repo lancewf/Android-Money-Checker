@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 public class MatchingItemViewActivity extends Activity{
     private String[] storeNames;
+    private ArrayList<BillType> billTypes;
     private MatchingEntrySender matchingEntrySender;
     
     @Override
@@ -34,8 +35,10 @@ public class MatchingItemViewActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.matchingitemview);
         storeNames = getIntent().getExtras().getStringArray("storeNames");
-        matchingEntrySender = new MatchingEntrySender(
-                DataStore.getInstance().getBillTypes());
+        billTypes = 
+        		getIntent().getExtras().getParcelableArrayList("billTypes");
+        
+        matchingEntrySender = new MatchingEntrySender(billTypes);
         Button submitButton = (Button)findViewById(R.id.submitwith);
         submitButton.setOnClickListener(new OnClickListener(){
             public void onClick(View v) {
@@ -114,6 +117,7 @@ public class MatchingItemViewActivity extends Activity{
                         Intent intent = new Intent().setClass(
                                 MatchingItemViewActivity.this, 
                                 ModifyEntryActivity.class);
+                        intent.putExtra("billTypes", billTypes);
                         intent.putExtra("storeNames", storeNames);
                         intent.putExtra("store", purchase.getStore());
                         intent.putExtra("cost", purchase.getCost());
@@ -173,7 +177,7 @@ public class MatchingItemViewActivity extends Activity{
     
     private BillType findBillType(){
         int billTypeId = getBillTypeId();
-        for (BillType billType : DataStore.getInstance().getBillTypes())
+        for (BillType billType : billTypes)
         {
             if (billTypeId == billType.getId()){
                 return billType;

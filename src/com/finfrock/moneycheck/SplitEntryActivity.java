@@ -26,17 +26,19 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TextView;
 
 public class SplitEntryActivity extends Activity {
     private AddEntrySender addEntrySender = new AddEntrySender();
-    
+    private ArrayList<BillType> billTypes;
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splitentry);
         
         String store = getIntent().getExtras().getString("store");
+        billTypes = 
+        		getIntent().getExtras().getParcelableArrayList("billTypes");
+        
         double cost = getIntent().getExtras().getDouble("cost");
         int year = getIntent().getExtras().getInt("year");
         int month = getIntent().getExtras().getInt("month");
@@ -260,7 +262,7 @@ public class SplitEntryActivity extends Activity {
         Spinner spinner = new Spinner(this);
         spinner.setPadding(10, 10, 10, 10);
         ArrayAdapter<BillType> adapterBillType = new ArrayAdapter<BillType>(this, 
-                android.R.layout.simple_spinner_item, DataStore.getInstance().getBillTypes());
+                android.R.layout.simple_spinner_item, billTypes);
         adapterBillType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapterBillType);
         return spinner;

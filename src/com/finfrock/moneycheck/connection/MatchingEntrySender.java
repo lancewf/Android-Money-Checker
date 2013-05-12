@@ -16,9 +16,9 @@ public class MatchingEntrySender
 {
     private HttpRetiever httpRetiever = new HttpRetiever();
     
-    private BillType[] billTypes;
+    private ArrayList<BillType> billTypes;
     
-    public MatchingEntrySender(BillType[] billTypes){
+    public MatchingEntrySender(ArrayList<BillType> billTypes){
         this.billTypes = billTypes;
     }
     

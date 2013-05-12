@@ -31,13 +31,17 @@ import android.widget.TextView;
 
 public class MonthlyViewActivity extends Activity {
     private String[] storeNames;
+    private ArrayList<BillType> billTypes;
+    
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.purchaseview);
         
         storeNames = getIntent().getExtras().getStringArray("storeNames");
-        		
+        billTypes = 
+        		getIntent().getExtras().getParcelableArrayList("billTypes");
+        
         List<ViewItem> list = new ArrayList<ViewItem>();
         
         Calendar currentCalendar = Calendar.getInstance();
@@ -152,7 +156,7 @@ public class MonthlyViewActivity extends Activity {
             try
             {
                 YearlyPurchaseBuilder yearlyPurchaseBuilder = new YearlyPurchaseBuilder(
-                        DataStore.getInstance().getBillTypes());
+                		billTypes);
                 List<BillTypePurchaseCollection> billTypePurchaseCollections = 
                 		yearlyPurchaseBuilder.getBillTypePurchaseCollection(calendar);
                 
@@ -209,7 +213,7 @@ public class MonthlyViewActivity extends Activity {
             try
             {
                 MonthlyPurchaseBuilder monthlyPurchaseBuilder = new MonthlyPurchaseBuilder(
-                        DataStore.getInstance().getBillTypes());
+                		billTypes);
                 List<BillTypePurchaseCollection> billTypePurchaseCollections = 
                 		monthlyPurchaseBuilder.getBillTypePurchaseCollection(calendar);
                 
@@ -241,6 +245,7 @@ public class MonthlyViewActivity extends Activity {
                     public void onClick(View v) {
                         Intent intent = new Intent().setClass(MonthlyViewActivity.this, 
                                 MonthlyItemViewActivity.class);
+                        intent.putExtra("billTypes", billTypes);
                         intent.putExtra("storeNames", storeNames);
                         intent.putExtra("year", calendar.get(Calendar.YEAR));
                         intent.putExtra("month", calendar.get(Calendar.MONTH) + 1);

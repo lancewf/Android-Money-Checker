@@ -28,12 +28,15 @@ import android.widget.TextView;
 public class MonthlyItemViewActivity extends Activity {
 	
     private String[] storeNames;
+    private ArrayList<BillType> billTypes;
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.purchaseitemview);
         
         storeNames = getIntent().getExtras().getStringArray("storeNames");
+        billTypes = 
+        		getIntent().getExtras().getParcelableArrayList("billTypes");
         
         TextView billTypeName = (TextView) findViewById(R.id.purchaseitembilltype);
         TextView yearMonthName = (TextView) findViewById(R.id.purchaseitemyearmonth);
@@ -80,7 +83,7 @@ public class MonthlyItemViewActivity extends Activity {
             try
             {
                 MonthlyPurchaseBuilder monthlyPurchaseBuilder = new MonthlyPurchaseBuilder(
-                        DataStore.getInstance().getBillTypes());
+                		billTypes);
                 List<BillTypePurchaseCollection> billTypePurchaseCollectionList = 
                 		monthlyPurchaseBuilder.getBillTypePurchaseCollection(calendar);
                 
@@ -114,6 +117,7 @@ public class MonthlyItemViewActivity extends Activity {
                         Intent intent = new Intent().setClass(
                                 MonthlyItemViewActivity.this, 
                                 ModifyEntryActivity.class);
+                        intent.putExtra("billTypes", billTypes);
                         intent.putExtra("storeNames", storeNames);
                         intent.putExtra("store", purchase.getStore());
                         intent.putExtra("cost", purchase.getCost());
@@ -154,7 +158,7 @@ public class MonthlyItemViewActivity extends Activity {
     
     private BillType findBillType(){
         int billTypeId = getBillTypeId();
-        for (BillType billType : DataStore.getInstance().getBillTypes())
+        for (BillType billType : billTypes)
         {
             if (billTypeId == billType.getId()){
                 return billType;
