@@ -12,7 +12,7 @@ import java.net.URLEncoder;
 
 public class HttpRetiever
 {
-    private String baseUrl = "http://moneyreport.coasterq.com/";
+    private String baseUrl = "http://yoururl.com";
     
     public String sendPostMessage(String urlPath, HttpPart[] httpParts)
             throws IOException
