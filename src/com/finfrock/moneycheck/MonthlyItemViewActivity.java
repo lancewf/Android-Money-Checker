@@ -24,14 +24,16 @@ import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.util.Log;
 
-public class MonthlyItemViewActivity extends Activity
-{
+public class MonthlyItemViewActivity extends Activity {
+	
+    private String[] storeNames;
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.purchaseitemview);
+        
+        storeNames = getIntent().getExtras().getStringArray("storeNames");
         
         TextView billTypeName = (TextView) findViewById(R.id.purchaseitembilltype);
         TextView yearMonthName = (TextView) findViewById(R.id.purchaseitemyearmonth);
@@ -53,7 +55,7 @@ public class MonthlyItemViewActivity extends Activity
     protected void onResume(){
         super.onResume();
         setProgressBar();
-        new GetPurchaseTask().execute(createCalendar());
+        new GetPurchaseTask(createCalendar()).execute();
     }
     
     private void setProgressBar(){
@@ -69,29 +71,35 @@ public class MonthlyItemViewActivity extends Activity
         return getIntent().getExtras().getInt("billTypeId");
     }
 
-    private class GetPurchaseTask extends AsyncTask<Calendar, Void, List<BillTypePurchaseCollection>> {
-        protected List<BillTypePurchaseCollection> doInBackground(Calendar... dates) {
+    private class GetPurchaseTask extends AsyncTask<Void, Void, BillTypePurchaseCollection> {
+    	private Calendar calendar;
+    	public GetPurchaseTask(Calendar calendar){
+    		this.calendar = calendar;
+    	}
+        protected BillTypePurchaseCollection doInBackground(Void... ntohting) {
             try
             {
                 MonthlyPurchaseBuilder monthlyPurchaseBuilder = new MonthlyPurchaseBuilder(
                         DataStore.getInstance().getBillTypes());
-                return monthlyPurchaseBuilder.getBillTypePurchaseCollection(dates[0]);
-            } catch (JSONException e)
-            {
-                // TODO Auto-generated catch block
+                List<BillTypePurchaseCollection> billTypePurchaseCollectionList = 
+                		monthlyPurchaseBuilder.getBillTypePurchaseCollection(calendar);
+                
+                BillTypePurchaseCollection billTypePurchaseCollection = 
+                        findBillTypePurchaseCollection(billTypePurchaseCollectionList);
+                
+                return billTypePurchaseCollection;
+            } catch (JSONException e){
                 e.printStackTrace();
             }
-            return new ArrayList<BillTypePurchaseCollection>();
+            return null;
         }
 
         protected void onPostExecute(
-                List<BillTypePurchaseCollection> billTypePurchaseCollections)
+                BillTypePurchaseCollection billTypePurchaseCollection)
         {
             ScrollView scrollView = (ScrollView) findViewById(R.id.purchaseitemviewscrollview);
 
             TableLayout tableLayout = new TableLayout(MonthlyItemViewActivity.this);
-            BillTypePurchaseCollection billTypePurchaseCollection = 
-                findBillTypePurchaseCollection(billTypePurchaseCollections);
             
             for(final Purchase purchase : billTypePurchaseCollection.getPurchases()){
                 List<String> columns = new ArrayList<String>();
@@ -106,6 +114,7 @@ public class MonthlyItemViewActivity extends Activity
                         Intent intent = new Intent().setClass(
                                 MonthlyItemViewActivity.this, 
                                 ModifyEntryActivity.class);
+                        intent.putExtra("storeNames", storeNames);
                         intent.putExtra("store", purchase.getStore());
                         intent.putExtra("cost", purchase.getCost());
                         intent.putExtra("month", purchase.getCalendar().get(Calendar.MONTH) + 1);

@@ -39,39 +39,41 @@ public class AllowanceActivity extends Activity
         
         progressBar.setIndeterminate(true);
         setContentView(progressBar);
-        new GetSummaryItemsTask().execute("");
+        new GetSummaryItemsTask().execute();
     }
     
-    private class GetSummaryItemsTask extends AsyncTask<String, Void, List<SummaryItem>> {
-        protected List<SummaryItem> doInBackground(String... urls) {
-            SummaryBuilder summaryBuilder = new SummaryBuilder(
-                    DataStore.getInstance().getBillTypes());
-            try
-            {
-                return summaryBuilder.build();
-            } catch (JSONException e)
-            {
-                // TODO Auto-generated catch block
+    private class GetSummaryItemsTask extends AsyncTask<Void, Void, List<List<String>>> {
+        protected List<List<String>> doInBackground(Void... nothing) {
+            List<List<String>> columnsCollection = new ArrayList<List<String>>();
+            try{
+                SummaryBuilder summaryBuilder = new SummaryBuilder(
+                        DataStore.getInstance().getBillTypes());
+            	List<SummaryItem> summaryItems = summaryBuilder.build();
+                
+                for (SummaryItem item : summaryItems){
+                    List<String> columns = new ArrayList<String>();
+                    columns.add(item.getBillType().getName());
+                    columns.add("$"
+                            + roundMoney(item.getAmountLeftOfAverage()));
+                    columns.add("$"
+                            + roundMoney(item.getAverage()));
+                    columns.add("$"
+                            + roundMoney(item.getAllotted()));
+                    
+                    columnsCollection.add(columns);
+                }
+            } catch (JSONException e){
                 e.printStackTrace();
             }
-            return new ArrayList<SummaryItem>();
+            
+            return columnsCollection;
         }
 
-        protected void onPostExecute(List<SummaryItem> summaryItems) {
+        protected void onPostExecute(List<List<String>> columnsCollection) {
             ScrollView scrollView = new ScrollView(AllowanceActivity.this);
             TableLayout tableLayout = new TableLayout(
                     AllowanceActivity.this);
-            for (SummaryItem item : summaryItems)
-            {
-                List<String> columns = new ArrayList<String>();
-                columns.add(item.getBillType().getName());
-                columns.add("$"
-                        + roundMoney(item.getAmountLeftOfAverage()));
-                columns.add("$"
-                        + roundMoney(item.getAverage()));
-                columns.add("$"
-                        + roundMoney(item.getAllotted()));
-
+            for (List<String> columns : columnsCollection){
                 tableLayout.addView(createRow(columns));
             }
             scrollView.addView(tableLayout);

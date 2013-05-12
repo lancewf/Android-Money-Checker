@@ -19,12 +19,9 @@ public class DataStore
         return instance;
     }
     
-    private DataStore(){
-        
-    }
+    private DataStore(){}
     
     private BillType[] billTypes;
-    private String[] storeNames;
     
     public BillType[] getBillTypes(){
         if(billTypes == null){
@@ -33,23 +30,11 @@ public class DataStore
             try
             {
                 billTypes = builder.build();
-            } catch (JSONException e)
-            {
-                // TODO Auto-generated catch block
+            } catch (JSONException e){
                 e.printStackTrace();
             }
         }
         
         return billTypes;
     }
-    
-    public String[] getStoreNames(){
-        if(storeNames == null){
-            StoreNameRetirever storeNameRetirever = new StoreNameRetirever();
-            storeNames = storeNameRetirever.getStoreNames();
-        }
-        return storeNames;
-    }
-    
-    
 }

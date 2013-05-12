@@ -29,23 +29,25 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-public class MonthlyViewActivity extends Activity
-{
+public class MonthlyViewActivity extends Activity {
+    private String[] storeNames;
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.purchaseview);
         
+        storeNames = getIntent().getExtras().getStringArray("storeNames");
+        		
         List<ViewItem> list = new ArrayList<ViewItem>();
         
         Calendar currentCalendar = Calendar.getInstance();
         
-        for (int count = 0; count < 4; count++)
-        {
+        for (int count = 0; count < 12; count++){
             list.add(new ViewItem((Calendar)currentCalendar.clone(), MONTHLY_TYPE));
             currentCalendar.add(Calendar.MONTH, -1);
         }
         
+        //Same month as current but a couple years back. 
         currentCalendar = Calendar.getInstance();
         for (int count = 0; count < 2; count++)
         {
@@ -72,8 +74,7 @@ public class MonthlyViewActivity extends Activity
                 setData();
             }
 
-            @Override
-            public void onNothingSelected(AdapterView parent){
+            public void onNothingSelected(AdapterView<?> parent){
                 // Do nothing.
             }
         });
@@ -89,10 +90,10 @@ public class MonthlyViewActivity extends Activity
         Spinner spinner = (Spinner) findViewById(R.id.viewList);
         ViewItem viewItem = (ViewItem)spinner.getSelectedItem();
         if(viewItem.getType().equals(MONTHLY_TYPE)){
-            new MonthlyPurchaseTask().execute(viewItem.getCalendar());
+            new MonthlyPurchaseTask(viewItem.getCalendar()).execute();
         }
         else if(viewItem.getType().equals(YEARLY_TYPE)){
-            new YearlyPurchaseTask().execute(viewItem.getCalendar());
+            new YearlyPurchaseTask(viewItem.getCalendar()).execute();
         }
     }
     
@@ -138,76 +139,112 @@ public class MonthlyViewActivity extends Activity
         }
     }
     
-    private class YearlyPurchaseTask extends AsyncTask<Calendar, Void, List<BillTypePurchaseCollection>> {
+    private class YearlyPurchaseTask extends 
+    	AsyncTask<Void, Void, List<List<String>>> {
         private Calendar calendar;
-        protected List<BillTypePurchaseCollection> doInBackground(Calendar... dates) {
+        
+        public YearlyPurchaseTask(Calendar calendar){
+        	this.calendar = calendar;
+        }
+        
+        protected List<List<String>> doInBackground(Void... nothing) {
+        	List<List<String>> billTypeColumnsCollection = new ArrayList<List<String>>();
             try
             {
                 YearlyPurchaseBuilder yearlyPurchaseBuilder = new YearlyPurchaseBuilder(
                         DataStore.getInstance().getBillTypes());
-                calendar = dates[0];
-                return yearlyPurchaseBuilder.getBillTypePurchaseCollection(calendar);
-            } catch (JSONException e)
-            {
-                // TODO Auto-generated catch block
+                List<BillTypePurchaseCollection> billTypePurchaseCollections = 
+                		yearlyPurchaseBuilder.getBillTypePurchaseCollection(calendar);
+                
+                for (BillTypePurchaseCollection billTypePurchaseCollection : billTypePurchaseCollections)
+                {
+                    final BillType billtype = billTypePurchaseCollection.getBillType();
+                    List<String> columns = new ArrayList<String>();
+                    columns.add(billtype.getName());
+                    columns.add("$" + roundMoney(billTypePurchaseCollection.sum()));
+                    
+                    billTypeColumnsCollection.add(columns);
+                }
+            } catch (JSONException e){
                 e.printStackTrace();
             }
-            return new ArrayList<BillTypePurchaseCollection>();
+            return billTypeColumnsCollection;
         }
 
-        protected void onPostExecute(List<BillTypePurchaseCollection> billTypePurchaseCollections) {
+        protected void onPostExecute(List<List<String>> billTypeColumnsCollection) {
             ScrollView scrollView = (ScrollView) findViewById(R.id.purchaseviewscrollview);
             TableLayout tableLayout = new TableLayout(MonthlyViewActivity.this);
-            for (BillTypePurchaseCollection billTypePurchaseCollection : billTypePurchaseCollections)
-            {
-                final BillType billtype = billTypePurchaseCollection.getBillType();
-                List<String> columns = new ArrayList<String>();
-                columns.add(billtype.getName());
-                columns.add("$" + roundMoney(billTypePurchaseCollection.sum()));
-
-                TableRow tableRow = createRow(columns);
+            for (List<String> billTypeColumns : billTypeColumnsCollection){
+                TableRow tableRow = createRow(billTypeColumns);
                 tableLayout.addView(tableRow);
             }
             scrollView.removeAllViews();
             scrollView.addView(tableLayout);
         }
     }
+    
+    private class MonthlyPurchaseTaskData{
+    	private List<String> columns;
+    	private int billTypeId;
+    	public MonthlyPurchaseTaskData(List<String> columns, int billTypeId){
+    		this.columns = columns;
+    		this.billTypeId = billTypeId;
+    	}
+    	public List<String> getColumns(){return columns;}
+    	public int getBillTypeId(){return billTypeId;}
+    }
+    
+    private class MonthlyPurchaseTask extends 
+    	AsyncTask<Void, Void, List<MonthlyPurchaseTaskData>> {
 
-    private class MonthlyPurchaseTask extends AsyncTask<Calendar, Void, List<BillTypePurchaseCollection>> {
-        private Calendar calendar;
-        protected List<BillTypePurchaseCollection> doInBackground(Calendar... dates) {
+    	private Calendar calendar;
+    	
+    	public MonthlyPurchaseTask(Calendar calendar){
+    		this.calendar = calendar;
+    	}
+    	
+        protected List<MonthlyPurchaseTaskData> doInBackground(Void... nothing) {
+        	List<MonthlyPurchaseTaskData> monthlyPurchaseTaskDataCollection = 
+        			new ArrayList<MonthlyPurchaseTaskData>();
             try
             {
                 MonthlyPurchaseBuilder monthlyPurchaseBuilder = new MonthlyPurchaseBuilder(
                         DataStore.getInstance().getBillTypes());
-                calendar = dates[0];
-                return monthlyPurchaseBuilder.getBillTypePurchaseCollection(calendar);
-            } catch (JSONException e)
-            {
-                // TODO Auto-generated catch block
+                List<BillTypePurchaseCollection> billTypePurchaseCollections = 
+                		monthlyPurchaseBuilder.getBillTypePurchaseCollection(calendar);
+                
+                for (BillTypePurchaseCollection billTypePurchaseCollection : billTypePurchaseCollections)
+                {
+                    BillType billType = billTypePurchaseCollection.getBillType();
+                    List<String> columns = new ArrayList<String>();
+                    columns.add(billType.getName());
+                    columns.add("$" + roundMoney(billTypePurchaseCollection.sum()));
+                    
+                    monthlyPurchaseTaskDataCollection.add(new MonthlyPurchaseTaskData(columns, 
+                    		billType.getId()));
+                }
+                
+            } catch (JSONException e){
                 e.printStackTrace();
             }
-            return new ArrayList<BillTypePurchaseCollection>();
+            return monthlyPurchaseTaskDataCollection;
         }
 
-        protected void onPostExecute(List<BillTypePurchaseCollection> billTypePurchaseCollections) {
+        protected void onPostExecute(List<MonthlyPurchaseTaskData> billTypePurchaseCollections) {
             ScrollView scrollView = (ScrollView) findViewById(R.id.purchaseviewscrollview);
             TableLayout tableLayout = new TableLayout(MonthlyViewActivity.this);
-            for (BillTypePurchaseCollection billTypePurchaseCollection : billTypePurchaseCollections)
-            {
-                final BillType billtype = billTypePurchaseCollection.getBillType();
-                List<String> columns = new ArrayList<String>();
-                columns.add(billtype.getName());
-                columns.add("$" + roundMoney(billTypePurchaseCollection.sum()));
+            for (MonthlyPurchaseTaskData monthlyPurchaseTaskData : billTypePurchaseCollections){
+                final int billTypeId = monthlyPurchaseTaskData.getBillTypeId();
 
-                TableRow tableRow = createRow(columns);
+                TableRow tableRow = createRow(monthlyPurchaseTaskData.getColumns());
                 tableRow.setOnClickListener(new OnClickListener(){            
                     public void onClick(View v) {
                         Intent intent = new Intent().setClass(MonthlyViewActivity.this, 
                                 MonthlyItemViewActivity.class);
+                        intent.putExtra("storeNames", storeNames);
                         intent.putExtra("year", calendar.get(Calendar.YEAR));
                         intent.putExtra("month", calendar.get(Calendar.MONTH) + 1);
-                        intent.putExtra("billTypeId", billtype.getId());
+                        intent.putExtra("billTypeId", billTypeId);
                         MonthlyViewActivity.this.startActivity(intent);
                 }});
                 tableLayout.addView(tableRow);

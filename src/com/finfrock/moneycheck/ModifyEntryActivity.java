@@ -27,11 +27,14 @@ public class ModifyEntryActivity extends Activity {
     private ModifyEntrySender modifyEntrySender = new ModifyEntrySender();
     private DeleteEntrySender deleteEntrySender = new DeleteEntrySender();
     private int key;
+    private String[] storeNames;
     
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.modifyentry);
+        
+        storeNames = getIntent().getExtras().getStringArray("storeNames");
         
         Button saveButton = (Button)findViewById(R.id.save);
         saveButton.setOnClickListener(new OnClickListener(){
@@ -50,8 +53,8 @@ public class ModifyEntryActivity extends Activity {
         
         AutoCompleteTextView textView = (AutoCompleteTextView) 
             findViewById(R.id.modifyStores);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item, 
-                DataStore.getInstance().getStoreNames());
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
+        		R.layout.list_item, storeNames);
         textView.setAdapter(adapter);
                                             
         Spinner spinner = (Spinner) findViewById(R.id.modifyBillType);

@@ -27,13 +27,18 @@ import android.widget.TextView;
 
 public class AddEntryActivity extends Activity {
     private AddEntrySender addEntrySender = new AddEntrySender();
-    private MatchingEntrySender matchingEntrySender = new MatchingEntrySender(
-            DataStore.getInstance().getBillTypes());
+    private String[] storeNames;
+    private MatchingEntrySender matchingEntrySender;
     
-    @Override
+    @Override 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addentry);
+        matchingEntrySender = new MatchingEntrySender(
+                DataStore.getInstance().getBillTypes());
+        storeNames = getIntent().getExtras().getStringArray("storeNames");
+        
+//        getIntent().getExtras().getParcelableArrayList(key)
         
         Button okButton = (Button)findViewById(R.id.ok);
         okButton.setOnClickListener(new OnClickListener(){
@@ -67,9 +72,10 @@ public class AddEntryActivity extends Activity {
             }
         });
         
-        AutoCompleteTextView textView = (AutoCompleteTextView) findViewById(R.id.stores);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item, 
-                DataStore.getInstance().getStoreNames());
+        AutoCompleteTextView textView = (AutoCompleteTextView) 
+        		findViewById(R.id.stores);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
+        		R.layout.list_item, storeNames);
         textView.setAdapter(adapter);
                                             
         Spinner spinner = (Spinner) findViewById(R.id.billType);
@@ -157,6 +163,7 @@ public class AddEntryActivity extends Activity {
                 Intent intent = new Intent().setClass(
                         AddEntryActivity.this, 
                         MatchingItemViewActivity.class);
+                intent.putExtra("storeNames", storeNames);
                 intent.putExtra("store", purchase.getStore());
                 intent.putExtra("cost", purchase.getCost());
                 intent.putExtra("month", purchase.getCalendar().get(Calendar.MONTH));

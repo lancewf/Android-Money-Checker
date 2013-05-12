@@ -25,16 +25,17 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-public class MatchingItemViewActivity extends Activity
-{
-    private MatchingEntrySender matchingEntrySender = new MatchingEntrySender(
-            DataStore.getInstance().getBillTypes());
+public class MatchingItemViewActivity extends Activity{
+    private String[] storeNames;
+    private MatchingEntrySender matchingEntrySender;
     
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.matchingitemview);
-
+        storeNames = getIntent().getExtras().getStringArray("storeNames");
+        matchingEntrySender = new MatchingEntrySender(
+                DataStore.getInstance().getBillTypes());
         Button submitButton = (Button)findViewById(R.id.submitwith);
         submitButton.setOnClickListener(new OnClickListener(){
             public void onClick(View v) {
@@ -113,6 +114,7 @@ public class MatchingItemViewActivity extends Activity
                         Intent intent = new Intent().setClass(
                                 MatchingItemViewActivity.this, 
                                 ModifyEntryActivity.class);
+                        intent.putExtra("storeNames", storeNames);
                         intent.putExtra("store", purchase.getStore());
                         intent.putExtra("cost", purchase.getCost());
                         intent.putExtra("month", purchase.getCalendar().get(Calendar.MONTH));
