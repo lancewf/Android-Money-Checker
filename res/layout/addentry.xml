@@ -96,7 +96,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/billType"
         android:layout_toLeftOf="@+id/cancel"
-        android:text="Split" />
+        android:text="Split"/>
+    
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"

@@ -55,5 +55,14 @@
             android:label="@string/app_name"
             android:name=".ProgressActivity"
             android:theme="@android:style/Theme.NoTitleBar" />
+      <activity
+            android:label="@string/app_name"
+            android:name=".SearchPurchaseActivity"
+            android:theme="@android:style/Theme.NoTitleBar" />
+      <activity
+            android:label="@string/app_name"
+            android:name=".PurchaseSearchViewActivity"
+            android:theme="@android:style/Theme.NoTitleBar" />
+      
     </application>
 </manifest>

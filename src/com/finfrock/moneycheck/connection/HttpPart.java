@@ -4,6 +4,16 @@ public class HttpPart
 {
     private String name;
     private String value;
+    
+    public HttpPart(){
+    	
+    }
+    
+    public HttpPart(String name, String value){
+    	this.name = name;
+    	this.value = value;
+    }
+    
     public String getName()
     {
         return name;
@@ -20,6 +30,4 @@ public class HttpPart
     {
         this.value = value;
     }
-    
-    
 }

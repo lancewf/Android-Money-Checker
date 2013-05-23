@@ -85,6 +85,7 @@ public class MoneyCheckActivity extends TabActivity {
         tabHost.addTab(buildAllowanceTab(tabHost, billTypes));
         tabHost.addTab(buildAddEntryTab(tabHost, storeNames, billTypes));
         tabHost.addTab(buildMonthlyViewTab(tabHost, storeNames, billTypes));
+        tabHost.addTab(buildSearchTab(tabHost, storeNames, billTypes));
 
         tabHost.setCurrentTab(1);
     }
@@ -92,6 +93,16 @@ public class MoneyCheckActivity extends TabActivity {
     private TabHost.TabSpec buildWaitTab(TabHost tabHost){
     	Intent intent = new Intent().setClass(this, ProgressActivity.class);
     	TabHost.TabSpec spec = tabHost.newTabSpec("loading").setIndicator("Loading...")
+                      .setContent(intent);
+        return spec;
+    }
+    
+    private TabHost.TabSpec buildSearchTab(TabHost tabHost, String[] storeNames, 
+    		ArrayList<BillType> billTypes){
+    	Intent intent = new Intent().setClass(this, SearchPurchaseActivity.class);
+    	intent.putExtra("storeNames", storeNames);
+    	intent.putExtra("billTypes", billTypes);
+    	TabHost.TabSpec spec = tabHost.newTabSpec("search").setIndicator("Search")
                       .setContent(intent);
         return spec;
     }

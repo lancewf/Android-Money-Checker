@@ -2,7 +2,10 @@ package com.finfrock.moneycheck.data;
 
 import java.util.Calendar;
 
-public class Purchase
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Purchase implements Parcelable
 {
     private BillType billType;
     private Calendar calendar;
@@ -59,4 +62,36 @@ public class Purchase
     {
         this.note = note;
     }
+    
+	public int describeContents() {
+		return 0;
+	}
+	
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeParcelable(billType, flags);
+		dest.writeSerializable(calendar);
+		dest.writeString(store);
+		dest.writeDouble(cost);
+		dest.writeString(note);
+		dest.writeInt(key);
+	}
+	
+	public static final Parcelable.Creator<Purchase> CREATOR = new Parcelable.Creator<Purchase>() {
+		public Purchase createFromParcel(Parcel in) {
+			Purchase purchase = new Purchase();
+			purchase.billType = in.readParcelable(
+					BillType.class.getClassLoader());
+			purchase.calendar = (Calendar)in.readSerializable();
+			purchase.store = in.readString();
+			purchase.cost = in.readDouble();
+			purchase.note = in.readString();
+			purchase.key = in.readInt();
+
+			return purchase;
+		}
+
+		public Purchase[] newArray(int size) {
+			return new Purchase[size];
+		}
+	};
 }

@@ -9,10 +9,17 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.List;
 
 public class HttpRetiever
 {
-    private String baseUrl = "http://yoururl.com";
+    private String baseUrl = "http://moneyreport.coasterq.com/";
+    
+    public String sendPostMessage(String urlPath, List<HttpPart> httpParts)
+            throws IOException
+    {
+    	return sendPostMessage(urlPath, httpParts.toArray(new HttpPart[httpParts.size()]));
+    }
     
     public String sendPostMessage(String urlPath, HttpPart[] httpParts)
             throws IOException

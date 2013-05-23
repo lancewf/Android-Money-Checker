@@ -110,6 +110,7 @@ public class MonthlyItemViewActivity extends Activity {
                 columns.add(purchase.getCalendar().get(Calendar.DAY_OF_MONTH) + " ");
                 columns.add(purchase.getStore());
                 columns.add("$" + roundMoney(purchase.getCost()));
+                columns.add(purchase.getNote());
                 TableRow tableRow = createRow(columns);
                 
                 tableRow.setOnClickListener(new OnClickListener(){            
