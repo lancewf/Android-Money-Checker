@@ -264,6 +264,7 @@ public class SplitEntryActivity extends Activity {
         ArrayAdapter<BillType> adapterBillType = new ArrayAdapter<BillType>(this, 
                 android.R.layout.simple_spinner_item, billTypes);
         adapterBillType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        System.out.println("billtype: " + billTypes.size());
         spinner.setAdapter(adapterBillType);
         return spinner;
     }

@@ -69,7 +69,9 @@ public class AddEntryActivity extends Activity {
                         AddEntryActivity.this, 
                         SplitEntryActivity.class);
                 intent.putExtra("store", purchase.getStore());
+                intent.putExtra("billTypes", billTypes);
                 intent.putExtra("cost", purchase.getCost());
+                intent.putExtra("storeNames", storeNames);
                 intent.putExtra("month", purchase.getCalendar().get(Calendar.MONTH) + 1);
                 intent.putExtra("dayOfMonth", purchase.getCalendar().get(Calendar.DAY_OF_MONTH));
                 intent.putExtra("year", purchase.getCalendar().get(Calendar.YEAR));
@@ -88,11 +90,6 @@ public class AddEntryActivity extends Activity {
                 android.R.layout.simple_spinner_item, billTypes);
         adapterBillType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapterBillType);
-    }
-    
-    protected void onResume(){
-        super.onResume();
-        clearFields();
     }
     
     @Override
@@ -129,8 +126,12 @@ public class AddEntryActivity extends Activity {
         EditText noteEditText = (EditText) findViewById(R.id.notes);
         EditText costEditText = (EditText)findViewById(R.id.cost);
         
+        double cost = 0.0;
         String costText = costEditText.getText().toString();
-        double cost = Double.parseDouble(costText);
+        if(costText.length() != 0){
+        	cost = Double.parseDouble(costText);
+        }
+        
         BillType selectedBillType = (BillType)spinner.getSelectedItem();
         String store = storesTextView.getText().toString();
         String note = noteEditText.getText().toString();

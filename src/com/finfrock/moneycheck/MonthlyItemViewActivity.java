@@ -104,14 +104,22 @@ public class MonthlyItemViewActivity extends Activity {
 
             TableLayout tableLayout = new TableLayout(MonthlyItemViewActivity.this);
             
+            List<String> columns = new ArrayList<String>();
+            columns.add("Date");
+            columns.add("Store");
+            columns.add("Cost");
+            columns.add("Note");
+            TableRow tableRow = createRow(columns);
+            tableLayout.addView(tableRow);
+            
             for(final Purchase purchase : billTypePurchaseCollection.getPurchases()){
-                List<String> columns = new ArrayList<String>();
+                columns = new ArrayList<String>();
                 
                 columns.add(purchase.getCalendar().get(Calendar.DAY_OF_MONTH) + " ");
                 columns.add(purchase.getStore());
                 columns.add("$" + roundMoney(purchase.getCost()));
                 columns.add(purchase.getNote());
-                TableRow tableRow = createRow(columns);
+                tableRow = createRow(columns);
                 
                 tableRow.setOnClickListener(new OnClickListener(){            
                     public void onClick(View v) {

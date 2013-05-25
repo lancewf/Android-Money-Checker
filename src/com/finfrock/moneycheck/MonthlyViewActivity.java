@@ -9,9 +9,11 @@ import org.json.JSONException;
 
 import com.finfrock.moneycheck.R;
 import com.finfrock.moneycheck.connection.MonthlyPurchaseBuilder;
+import com.finfrock.moneycheck.connection.SummaryBuilder;
 import com.finfrock.moneycheck.connection.YearlyPurchaseBuilder;
 import com.finfrock.moneycheck.data.BillType;
 import com.finfrock.moneycheck.data.BillTypePurchaseCollection;
+import com.finfrock.moneycheck.data.SummaryItem;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -32,6 +34,9 @@ import android.widget.TextView;
 public class MonthlyViewActivity extends Activity {
     private String[] storeNames;
     private ArrayList<BillType> billTypes;
+    private static String MONTHLY_TYPE = "Monthly";
+    private static String YEARLY_TYPE = "Yearly";
+    private static String ALLOWANCE_TYPE = "Allowance";
     
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -45,6 +50,8 @@ public class MonthlyViewActivity extends Activity {
         List<ViewItem> list = new ArrayList<ViewItem>();
         
         Calendar currentCalendar = Calendar.getInstance();
+        
+        list.add(new ViewItem(currentCalendar, ALLOWANCE_TYPE));
         
         for (int count = 0; count < 12; count++){
             list.add(new ViewItem((Calendar)currentCalendar.clone(), MONTHLY_TYPE));
@@ -95,9 +102,10 @@ public class MonthlyViewActivity extends Activity {
         ViewItem viewItem = (ViewItem)spinner.getSelectedItem();
         if(viewItem.getType().equals(MONTHLY_TYPE)){
             new MonthlyPurchaseTask(viewItem.getCalendar()).execute();
-        }
-        else if(viewItem.getType().equals(YEARLY_TYPE)){
+        } else if(viewItem.getType().equals(YEARLY_TYPE)){
             new YearlyPurchaseTask(viewItem.getCalendar()).execute();
+        } else if(viewItem.getType().equals(ALLOWANCE_TYPE)){
+        	new AllowanceItemsTask().execute();
         }
     }
     
@@ -109,8 +117,6 @@ public class MonthlyViewActivity extends Activity {
         scrollView.removeAllViews();
         scrollView.addView(progressBar);
     }
-    private static String MONTHLY_TYPE = "Monthly";
-    private static String YEARLY_TYPE = "Yearly";
     
     private class ViewItem{
         
@@ -136,10 +142,60 @@ public class MonthlyViewActivity extends Activity {
             {
                 return calendar.getDisplayName(Calendar.MONTH, Calendar.LONG,
                         Locale.US) + " " + calendar.get(Calendar.YEAR);
-            } else
+            } else if(type.equals(ALLOWANCE_TYPE)){
+            	return "Allowance";
+            }
+            else if(type.equals(YEARLY_TYPE))
             {
                 return "All " + calendar.get(Calendar.YEAR);
             }
+            else{
+            	return "Not known";
+            }
+        }
+    }
+    
+    private class AllowanceItemsTask extends AsyncTask<Void, Void, List<List<String>>> {
+        protected List<List<String>> doInBackground(Void... nothing) {
+            List<List<String>> columnsCollection = new ArrayList<List<String>>();
+            try{
+                SummaryBuilder summaryBuilder = new SummaryBuilder(billTypes);
+            	List<SummaryItem> summaryItems = summaryBuilder.build();
+                
+                List<String> columns = new ArrayList<String>();
+                columns.add("Bill Type");
+                columns.add("Left");
+                columns.add("Average");
+                columns.add("Allotted");
+                
+                columnsCollection.add(columns);
+                for (SummaryItem item : summaryItems){
+                    columns = new ArrayList<String>();
+                    columns.add(item.getBillType().getName());
+                    columns.add("$"
+                            + roundMoney(item.getAmountLeftOfAverage()));
+                    columns.add("$"
+                            + roundMoney(item.getAverage()));
+                    columns.add("$"
+                            + roundMoney(item.getAllotted()));
+                    
+                    columnsCollection.add(columns);
+                }
+            } catch (JSONException e){
+                e.printStackTrace();
+            }
+            
+            return columnsCollection;
+        }
+
+        protected void onPostExecute(List<List<String>> columnsCollection) {
+        	ScrollView scrollView = (ScrollView) findViewById(R.id.purchaseviewscrollview);
+            TableLayout tableLayout = new TableLayout(MonthlyViewActivity.this);
+            for (List<String> columns : columnsCollection){
+                tableLayout.addView(createRow(columns));
+            }
+            scrollView.removeAllViews();
+            scrollView.addView(tableLayout);
         }
     }
     
@@ -178,6 +234,12 @@ public class MonthlyViewActivity extends Activity {
         protected void onPostExecute(List<List<String>> billTypeColumnsCollection) {
             ScrollView scrollView = (ScrollView) findViewById(R.id.purchaseviewscrollview);
             TableLayout tableLayout = new TableLayout(MonthlyViewActivity.this);
+            
+            List<String> columns = new ArrayList<String>();
+            columns.add("Bill Type");
+            columns.add("Sum");
+            tableLayout.addView(createRow(columns));
+            
             for (List<String> billTypeColumns : billTypeColumnsCollection){
                 TableRow tableRow = createRow(billTypeColumns);
                 tableLayout.addView(tableRow);
@@ -237,6 +299,11 @@ public class MonthlyViewActivity extends Activity {
         protected void onPostExecute(List<MonthlyPurchaseTaskData> billTypePurchaseCollections) {
             ScrollView scrollView = (ScrollView) findViewById(R.id.purchaseviewscrollview);
             TableLayout tableLayout = new TableLayout(MonthlyViewActivity.this);
+            List<String> columns = new ArrayList<String>();
+            columns.add("Bill Type");
+            columns.add("Sum");
+            tableLayout.addView(createRow(columns));
+            
             for (MonthlyPurchaseTaskData monthlyPurchaseTaskData : billTypePurchaseCollections){
                 final int billTypeId = monthlyPurchaseTaskData.getBillTypeId();
 
