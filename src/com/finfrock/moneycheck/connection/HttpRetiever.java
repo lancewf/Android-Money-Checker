@@ -13,7 +13,7 @@ import java.util.List;
 
 public class HttpRetiever
 {
-    private String baseUrl = "http://moneyreport.coasterq.com/";
+    private String baseUrl = "";
     
     public String sendPostMessage(String urlPath, List<HttpPart> httpParts)
             throws IOException
