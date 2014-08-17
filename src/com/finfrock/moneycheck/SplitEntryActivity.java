@@ -216,7 +216,7 @@ public class SplitEntryActivity extends Activity {
         cost.setPadding(10, 10, 10, 10);
         cost.setText("0.0");
         cost.setWidth(120);
-        cost.setKeyListener(DigitsKeyListener.getInstance("0123456789."));
+        cost.setKeyListener(DigitsKeyListener.getInstance("-0123456789."));
         cost.setOnFocusChangeListener(new OnFocusChangeListener(){
             public void onFocusChange(View v, boolean hasFocus){
                 adjustLastCell();

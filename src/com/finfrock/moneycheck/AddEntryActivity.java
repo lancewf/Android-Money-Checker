@@ -75,6 +75,7 @@ public class AddEntryActivity extends Activity {
                 intent.putExtra("month", purchase.getCalendar().get(Calendar.MONTH) + 1);
                 intent.putExtra("dayOfMonth", purchase.getCalendar().get(Calendar.DAY_OF_MONTH));
                 intent.putExtra("year", purchase.getCalendar().get(Calendar.YEAR));
+                clearFields();
                 AddEntryActivity.this.startActivity(intent);
             }
         });
